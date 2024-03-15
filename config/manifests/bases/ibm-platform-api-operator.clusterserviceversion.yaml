@@ -12,10 +12,10 @@ metadata:
       to manage the lifecycle of PlatformAPI. With this operator, you can simply deploy
       and upgrade platform-api.
     olm.skipRange: ""
-    operators.operatorframework.io/builder: operator-sdk-v1.3.0
-    operators.operatorframework.io/operator-type: 'non-standalone'
-    operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
     operators.openshift.io/infrastructure-features: '["disconnected"]'
+    operators.operatorframework.io/builder: operator-sdk-v1.3.0
+    operators.operatorframework.io/operator-type: non-standalone
+    operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
     repository: https://github.com/IBM/ibm-platform-api-operator
     support: IBM
   labels:
@@ -145,5 +145,4 @@ spec:
   minKubeVersion: 1.19.0
   provider:
     name: IBM
-  replaces: ibm-platform-api-operator.v0.0.0
   version: 0.0.0

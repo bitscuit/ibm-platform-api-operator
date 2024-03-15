@@ -236,8 +236,8 @@ undeploy-catalog: ## Undeploy the operator bundle catalogsource
 	- kubectl -n openshift-marketplace delete catalogsource $(OPERATOR_IMAGE_NAME)
 
 run-bundle:
-	$(OPERATOR_SDK) run bundle $(REGISTRY)/$(BUNDLE_IMAGE_NAME)-$(ARCH):$(RELEASE_VERSION) --pull-secret-name pull-secret-copy
-	$(KUBECTL) apply -f config/samples/operator_v1alpha1_platformapi.yaml
+	$(OPERATOR_SDK) run bundle $(REGISTRY)/$(BUNDLE_IMAGE_NAME)-$(ARCH):$(RELEASE_VERSION) --install-mode OwnNamespace
+	oc apply -f config/samples/operator_v1alpha1_platformapi.yaml
 
 upgrade-bundle:
 	$(OPERATOR_SDK) run bundle-upgrade $(REGISTRY)/$(BUNDLE_IMAGE_NAME)-$(ARCH):dev
@@ -263,11 +263,8 @@ build-catalog: build-bundle-image build-catalog-source ## Build bundle image and
 # Build bundle image
 build-bundle-image:
 	$(eval ARCH := $(shell uname -m|sed 's/x86_64/amd64/'))
-	@cp -f bundle/manifests/ibm-platform-api-operator.clusterserviceversion.yaml /tmp/ibm-platform-api-operator.clusterserviceversion.yaml
-	@$(YQ) d -i bundle/manifests/ibm-platform-api-operator.clusterserviceversion.yaml "spec.replaces"
 	$(CONTAINER_CLI) build -f bundle.Dockerfile -t $(REGISTRY)/$(BUNDLE_IMAGE_NAME)-$(ARCH):$(RELEASE_VERSION) .
 	$(CONTAINER_CLI) push $(REGISTRY)/$(BUNDLE_IMAGE_NAME)-$(ARCH):$(RELEASE_VERSION)
-	@mv /tmp/ibm-platform-api-operator.clusterserviceversion.yaml bundle/manifests/ibm-platform-api-operator.clusterserviceversion.yaml
 
 # Build catalog source
 build-catalog-source:
